@@ -14,7 +14,10 @@ import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import com.mongodb.client.result.UpdateResult;
 
 import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
 
@@ -92,6 +95,16 @@ public class OrdersRepository {
 	//   Native MongoDB query here for markOrderDelivered()
 	public boolean markOrderDelivered(String orderId) {
 
+		Query q = new Query();
+		q.addCriteria(Criteria.where("_id").is(orderId));
+		Update updateOps= new Update()
+								.set("delivered", "true");
+
+		UpdateResult result = mongoTemplate.updateMulti(q, updateOps, Document.class, "orders");
+		
+		if(result.wasAcknowledged()){
+			return true;
+		}
 		return false;
 	}
 

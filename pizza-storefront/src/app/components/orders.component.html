@@ -3,10 +3,10 @@
 
 <div *ngIf="pendingOrders.length !==0; else noOrders">
     <table>
-        <tr class="border" *ngFor="let o of pendingOrders">
+        <tr class="border" *ngFor="let o of pendingOrders; let i = index">
             <td>Date: {{ o.date }}</td>
             <td>Order Id: {{ o.orderId }}
-                <button type="button" >Delivered</button>
+                <button type="button" (click)="changeOrderStatus(i)" >Delivered</button>
             </td>
             <td>{{ o.total| currency: 'SGD'}}</td>
         </tr>

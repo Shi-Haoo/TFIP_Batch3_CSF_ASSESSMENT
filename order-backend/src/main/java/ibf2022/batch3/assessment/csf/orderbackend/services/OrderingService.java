@@ -90,6 +90,17 @@ public class OrderingService {
 	// For Task 7
 	// WARNING: Do not change the method's signature or its implemenation
 	public boolean markOrderDelivered(String orderId) {
+
+		Boolean orderMarked = false;
+		Boolean pendingDeleted = false;
+
+		orderMarked = ordersRepo.markOrderDelivered(orderId);
+
+		if(orderMarked){
+			pendingDeleted = pendingOrdersRepo.delete(orderId);
+		}
+
+
 		return ordersRepo.markOrderDelivered(orderId) && pendingOrdersRepo.delete(orderId);
 	}
 

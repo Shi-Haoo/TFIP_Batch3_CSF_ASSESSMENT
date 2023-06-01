@@ -18,6 +18,7 @@ export class OrdersComponent implements OnInit {
 
   orderEmail: string =""
   pendingOrders: PendingOrder[] = []
+  toDeleteOrder!: PendingOrder
 
   ngOnInit(): void {
 
@@ -31,6 +32,19 @@ export class OrdersComponent implements OnInit {
     .catch((error: HttpErrorResponse)=>alert(JSON.stringify(error)))
   }
 
+  changeOrderStatus(i: number){
+
+    this.toDeleteOrder = this.pendingOrders[i]
+
+    this.pizzaSvc.orderId = this.toDeleteOrder.orderId
+
+  
+    firstValueFrom(this.pizzaSvc.delivered())
+    .then((s)=>{
+      alert("order status has been changed to delievered")
+    })
+    .catch((error: HttpErrorResponse)=>alert(JSON.stringify(error)))
+  }
 
 
 

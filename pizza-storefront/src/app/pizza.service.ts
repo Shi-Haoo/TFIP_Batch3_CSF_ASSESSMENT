@@ -9,6 +9,7 @@ export class PizzaService {
 
   order!: Order
   processed!: ProcessedOrder
+  orderId!: string
   
 
   httpClient = inject(HttpClient)
@@ -34,6 +35,8 @@ export class PizzaService {
   // You may add any parameters and return any type from delivered() method
   // Do not change the method name
   delivered() {
+
+    return this.httpClient.delete(`${URL}/order/${this.orderId}`)
   }
 
 }
