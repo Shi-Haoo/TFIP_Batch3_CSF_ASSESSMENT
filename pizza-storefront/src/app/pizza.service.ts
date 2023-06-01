@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { Order, ProcessedOrder} from "./models";
+import { Order, PendingOrder, ProcessedOrder} from "./models";
 import { HttpClient } from "@angular/common/http";
 
 const URL = '/api'
@@ -24,7 +24,10 @@ export class PizzaService {
   // TODO: Task 5
   // You may add any parameters and return any type from getOrders() method
   // Do not change the method name
-  getOrders() {
+  getOrders(orderEmail: string) {
+    console.info(">>>order email in service>>", orderEmail)
+    
+    return this.httpClient.get<PendingOrder[]>(`${URL}/orders/${orderEmail}`)
   }
 
   // TODO: Task 7

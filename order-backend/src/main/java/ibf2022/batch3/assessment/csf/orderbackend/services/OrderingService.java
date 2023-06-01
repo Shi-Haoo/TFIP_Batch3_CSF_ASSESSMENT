@@ -75,6 +75,8 @@ public class OrderingService {
 		}
 
 		ordersRepo.add(order);
+		pendingOrdersRepo.add(order);
+
 
 		return order;
 	}

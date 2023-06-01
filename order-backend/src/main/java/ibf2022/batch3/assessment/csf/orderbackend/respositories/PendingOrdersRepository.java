@@ -1,12 +1,31 @@
 package ibf2022.batch3.assessment.csf.orderbackend.respositories;
 
-import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Repository;
 
+import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+
+@Repository
 public class PendingOrdersRepository {
+
+	@Autowired
+	RedisTemplate<String,String> redisTemplate;
 
 	// TODO: Task 3
 	// WARNING: Do not change the method's signature.
 	public void add(PizzaOrder order) {
+
+		redisTemplate.opsForValue().set(order.getOrderId(),Json.createObjectBuilder()
+															.add("orderId", order.getOrderId()) 
+															.add("date", order.getDate().toString())
+															.add("total", order.getTotal())
+															.add("name", order.getName())
+															.add("email", order.getEmail())
+															.build().toString());
+
 	}
 
 	// TODO: Task 7
@@ -14,5 +33,10 @@ public class PendingOrdersRepository {
 	public boolean delete(String orderId) {
 		return false;
 	}
+
+	// public JsonObject toJson(PizzaOrder order){
+
+		
+	// }
 
 }

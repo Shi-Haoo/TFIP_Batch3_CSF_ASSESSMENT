@@ -19,3 +19,10 @@ export interface ProcessedOrder{
     total: number
 
 }
+
+export interface PendingOrder{
+    orderId: string
+    date: number
+    total: number
+
+}

@@ -1,5 +1,8 @@
 package ibf2022.batch3.assessment.csf.orderbackend.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +22,9 @@ import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
 import ibf2022.batch3.assessment.csf.orderbackend.services.OrderException;
 import ibf2022.batch3.assessment.csf.orderbackend.services.OrderingService;
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 
 @Controller
 public class OrderController {
@@ -27,7 +35,7 @@ public class OrderController {
 	// TODO: Task 3 - POST /api/order
 	@PostMapping(path="/api/order")
 	@ResponseBody
-	public ResponseEntity<String> postOrder(@RequestBody Order order){
+	public ResponseEntity<String> postOrder(@RequestBody Order order) throws IOException{
 		System.out.println(">>>>post order>>>"+order.toString());
 		PizzaOrder po = new PizzaOrder();
 
@@ -71,7 +79,7 @@ public class OrderController {
 			return ResponseEntity
 					.status(HttpStatus.BAD_REQUEST)
 					.body(Json.createObjectBuilder()
-							add("error", ex.getMessage())
+							.add("error", ex.getMessage())
 							.build().toString());
 		}
 		
@@ -79,8 +87,32 @@ public class OrderController {
 	}
 
 	// TODO: Task 6 - GET /api/orders/<email>
+	@GetMapping(path="/api/orders/{orderEmail}")
+	@ResponseBody
+	public ResponseEntity<String> getPendingOrdersByEmail(@PathVariable String orderEmail){
 
 
+		List<PizzaOrder> pendingOrders = this.orderSvc.getPendingOrdersByEmail(orderEmail);
+
+		JsonArrayBuilder jab = Json.createArrayBuilder();
+
+		for(PizzaOrder po : pendingOrders){
+			JsonObject jOb = Json.createObjectBuilder()
+								.add("orderId", po.getOrderId())
+								.add("total", po.getTotal())
+								.add("date", po.getDate().toString())
+								.build();
+			jab.add(jOb);
+		}
+		
+		
+			return ResponseEntity
+			.status(HttpStatus.OK)
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(jab.build().toString());
+		
+
+	}
 	// TODO: Task 7 - DELETE /api/order/<orderId>
 
 }

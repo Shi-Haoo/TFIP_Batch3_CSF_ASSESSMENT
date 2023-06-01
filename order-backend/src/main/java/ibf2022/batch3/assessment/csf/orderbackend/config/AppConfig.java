@@ -18,6 +18,12 @@ public class AppConfig {
 	@Value("${redis.port}")
 	private Integer redisPort;
 
+	@Value("${redis.user}")
+	private String redisUser;
+
+	@Value("${redis.password}")
+	private String redisPassword;
+
 	@Value("${redis.database}")
 	private Integer redisDB;
 

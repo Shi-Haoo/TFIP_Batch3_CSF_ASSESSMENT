@@ -1,1 +1,22 @@
-<p>orders works!</p>
+
+<h3>Orders for {{ orderEmail }}</h3>
+
+<div *ngIf="pendingOrders.length !==0; else noOrders">
+    <table>
+        <tr class="border" *ngFor="let o of pendingOrders">
+            <td>Date: {{ o.date }}</td>
+            <td>Order Id: {{ o.orderId }}
+                <button type="button" >Delivered</button>
+            </td>
+            <td>{{ o.total| currency: 'SGD'}}</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <button [routerLink]="['/']">Back to Ordering</button>
+</div>
+<ng-template #noOrders>
+    <div>
+        <h3>You have no pending orders!!</h3>
+    </div>
+</ng-template>

@@ -4,7 +4,16 @@ import java.util.List;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
@@ -53,8 +62,28 @@ public class OrdersRepository {
 	// Write the native MongoDB query in the comment below
 	//   Native MongoDB query here for getPendingOrdersByEmail()
 	public List<PizzaOrder> getPendingOrdersByEmail(String email) {
+		
+		// Query q =new Query();
+		// q.addCriteria(Criteria.where("email").is(email));
 
-		return null;
+		// return mongoTemplate.find(q, Document.class, "orders").stream()
+        //                                                  .map(d -> convertFromDocument(d))
+        //                                                  .toList();
+
+		MatchOperation mOp = Aggregation.match(Criteria.where("email").is(email));
+
+		ProjectionOperation pop = Aggregation.project("_id", "total", "date");
+
+		SortOperation sop = Aggregation.sort(Sort.by(Direction.DESC, "date"));
+
+		Aggregation pipeline = Aggregation.newAggregation(mOp, pop, sop);
+
+		AggregationResults<Document> results = mongoTemplate.aggregate(pipeline, "orders", Document.class);
+
+		List<Document> rs = results.getMappedResults();
+
+		return rs.stream().map(d -> convertFromDocument(d)).toList();
+
 	}
 
 	// TODO: Task 7
@@ -66,5 +95,20 @@ public class OrdersRepository {
 		return false;
 	}
 
+	public PizzaOrder convertFromDocument(Document d){
+		PizzaOrder po = new PizzaOrder();
+
+		po.setOrderId(d.getString("_id"));
+		po.setDate(d.getDate("date"));
+		po.setTotal((float)d.getLong("total"));
+		// po.setName(d.getString("name"));
+		// po.setEmail(d.getString("email"));
+		// po.setSauce(d.getString("sauce"));
+		// po.setSize(d.getInteger("size"));
+		// po.setComments(d.getString("comments"));
+		// po.setToppings(d.getList("toppings", String.class));
+
+		return po;
+	}
 
 }
