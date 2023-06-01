@@ -9,6 +9,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PizzaService } from './pizza.service';
 
+
 const appRoutes: Routes = [
   { path: '', component: MainComponent, title: 'Place Order' },
   { path: 'orders/:email', component: OrdersComponent },
@@ -19,7 +20,7 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     MainComponent,
-    OrdersComponent,
+    OrdersComponent
   ],
   imports: [
     BrowserModule, ReactiveFormsModule, HttpClientModule, RouterModule.forRoot(appRoutes,{ useHash:true })
