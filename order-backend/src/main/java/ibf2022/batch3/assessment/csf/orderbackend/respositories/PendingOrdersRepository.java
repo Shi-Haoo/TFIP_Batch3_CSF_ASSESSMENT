@@ -31,12 +31,14 @@ public class PendingOrdersRepository {
 	// TODO: Task 7
 	// WARNING: Do not change the method's signature.
 	public boolean delete(String orderId) {
+		
+		Boolean recordDeleted = redisTemplate.delete(orderId);
+		
+		if(recordDeleted){
+			return true;
+		}
+
 		return false;
 	}
-
-	// public JsonObject toJson(PizzaOrder order){
-
-		
-	// }
 
 }

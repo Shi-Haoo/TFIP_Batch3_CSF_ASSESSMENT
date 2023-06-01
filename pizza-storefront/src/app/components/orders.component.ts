@@ -42,10 +42,13 @@ export class OrdersComponent implements OnInit {
     firstValueFrom(this.pizzaSvc.delivered())
     .then((s)=>{
       alert("order status has been changed to delievered")
+      firstValueFrom(this.pizzaSvc.getOrders(this.orderEmail))
+      .then((p)=>{
+        this.pendingOrders = p
+      })
+      .catch((error: HttpErrorResponse)=>alert(JSON.stringify(error)))
     })
     .catch((error: HttpErrorResponse)=>alert(JSON.stringify(error)))
   }
-
-
 
 }
