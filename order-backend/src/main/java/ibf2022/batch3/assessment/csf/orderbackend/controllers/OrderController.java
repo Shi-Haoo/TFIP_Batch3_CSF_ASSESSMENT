@@ -60,11 +60,19 @@ public class OrderController {
 					.contentType(MediaType.APPLICATION_JSON)
 					.body(Json.createObjectBuilder()
 							.add("orderId", processedOrder.getOrderId())
-							.add("date", processedOrder.getDate())
-							)
+							.add("date", processedOrder.getDate().getTime())
+							.add("name", processedOrder.getName())
+							.add("email", processedOrder.getEmail())
+							.add("total", processedOrder.getTotal())
+							.build().toString());
 
 		}catch(OrderException ex){
 
+			return ResponseEntity
+					.status(HttpStatus.BAD_REQUEST)
+					.body(Json.createObjectBuilder()
+							add("error", ex.getMessage())
+							.build().toString());
 		}
 		
 		
