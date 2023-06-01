@@ -3,17 +3,29 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { MainComponent } from './components/main.component';
+import { OrdersComponent } from './components/orders.component';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Routes } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PizzaService } from './pizza.service';
+
+const appRoutes: Routes = [
+  { path: '', component: MainComponent, title: 'Place Order' },
+  { path: 'orders/:email', component: OrdersComponent },
+  { path: '**', redirectTo:'/', pathMatch: 'full'}
+]
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
+    OrdersComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule, ReactiveFormsModule, HttpClientModule, RouterModule.forRoot(appRoutes,{ useHash:true })
   ],
 
-  providers: [ ],
+  providers: [ PizzaService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
