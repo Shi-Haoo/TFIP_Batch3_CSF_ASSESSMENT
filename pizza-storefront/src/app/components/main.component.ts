@@ -3,6 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Order } from '../models';
 import { PizzaService } from '../pizza.service';
 
+import { firstValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+
 const SIZES: string[] = [
   "Personal - 6 inches",
   "Regular - 9 inches",
@@ -30,6 +34,8 @@ export class MainComponent implements OnInit{
 
   fb = inject(FormBuilder)
   pizzaSvc = inject(PizzaService)
+  router = inject(Router)
+
   form!: FormGroup
 
   
@@ -67,8 +73,14 @@ export class MainComponent implements OnInit{
     console.info(">>>>order>>>", postOrder)
 
     this.pizzaSvc.order = postOrder
-    this.pizzaSvc.placeOrder()
-
+    
+    firstValueFrom(this.pizzaSvc.placeOrder())
+    .then((po)=>{
+      this.pizzaSvc.processed = po
+      this.router.navigate(['/orders', postOrder.email])
+    })
+    .catch((error: HttpErrorResponse)=>alert(JSON.stringify(error)))
+    
   }
 
   private createForm(){

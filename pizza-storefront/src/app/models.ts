@@ -11,11 +11,11 @@ export interface Order{
 
 }
 
-export interface processedOrder{
+export interface ProcessedOrder{
     orderId: string
     date: number
     name: string
     email: string
     total: number
-    
+
 }

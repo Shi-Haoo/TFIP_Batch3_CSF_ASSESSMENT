@@ -1,5 +1,5 @@
 import { Injectable, inject } from "@angular/core";
-import { Order } from "./models";
+import { Order, ProcessedOrder} from "./models";
 import { HttpClient } from "@angular/common/http";
 
 const URL = '/api'
@@ -8,6 +8,7 @@ const URL = '/api'
 export class PizzaService {
 
   order!: Order
+  processed!: ProcessedOrder
   
 
   httpClient = inject(HttpClient)
