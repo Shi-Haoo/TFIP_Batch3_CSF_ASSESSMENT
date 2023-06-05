@@ -1,6 +1,7 @@
 package ibf2022.batch3.assessment.csf.orderbackend.respositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,8 +12,8 @@ import jakarta.json.JsonObject;
 @Repository
 public class PendingOrdersRepository {
 
-	@Autowired
-	RedisTemplate<String,String> redisTemplate;
+	@Autowired @Qualifier("pending-orders")
+	private RedisTemplate<String,String> redisTemplate;
 
 	// TODO: Task 3
 	// WARNING: Do not change the method's signature.

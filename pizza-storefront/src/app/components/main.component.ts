@@ -30,7 +30,7 @@ export class MainComponent implements OnInit{
 
   pizzaSize = SIZES[0]
   
-  addedToppings: string[] = ['chicken','seafood']
+  addedToppings: string[] = []
 
   fb = inject(FormBuilder)
   pizzaSvc = inject(PizzaService)
@@ -49,19 +49,30 @@ export class MainComponent implements OnInit{
     this.pizzaSize = SIZES[parseInt(size)]
   }
 
+  //This event will be called everytime a checkbox is checked or unchecked
   modifyToppings(topping: any){
     
     if(topping.checked){
-      for (let i = 0; i < this.addedToppings.length; i++) {
-        if (this.addedToppings[i] === topping.value) {
-          this.addedToppings.splice(i, 1)
-        }
-  
-        this.addedToppings.push(topping.value)
-      }
+
+      // for (let i = 0; i < this.addedToppings.length; i++) {
+      //   if (this.addedToppings[i] === topping.value) {
+      //     this.addedToppings.splice(i, 1)
+      //     console.info("updatedToppings array>>>", this.addedToppings)
+      //   }
+      // }
+
+      this.addedToppings.push(topping.value)
   
       console.info("addedToppings array>>>", this.addedToppings)
     }
+
+    //if checkbox is unchecked, we remove that topping from the array using .filter().  
+    //.filter() filters out element that is equal to the topping unchecked from the checkbox
+    else{
+      this.addedToppings = this.addedToppings.filter((top: string) => top !== topping.value)
+      console.info("toppings array after unchecking>>>", this.addedToppings)
+    }
+    
     
   }
 
@@ -81,6 +92,10 @@ export class MainComponent implements OnInit{
     })
     .catch((error: HttpErrorResponse)=>alert(JSON.stringify(error)))
     
+  }
+
+  invalidForm(){
+    return this.form.invalid || this.addedToppings.length < 1
   }
 
   private createForm(){

@@ -22,7 +22,7 @@ export interface ProcessedOrder{
 
 export interface PendingOrder{
     orderId: string
-    date: number
+    date:  number
     total: number
 
 }

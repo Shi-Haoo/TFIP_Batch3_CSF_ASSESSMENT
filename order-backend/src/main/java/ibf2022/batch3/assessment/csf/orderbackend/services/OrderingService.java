@@ -3,6 +3,7 @@ package ibf2022.batch3.assessment.csf.orderbackend.services;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -19,9 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import ibf2022.batch3.assessment.csf.orderbackend.models.PizzaOrder;
 import ibf2022.batch3.assessment.csf.orderbackend.respositories.OrdersRepository;
 import ibf2022.batch3.assessment.csf.orderbackend.respositories.PendingOrdersRepository;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
+
 
 @Service
 public class OrderingService {
@@ -32,11 +31,11 @@ public class OrderingService {
 	@Autowired
 	private PendingOrdersRepository pendingOrdersRepo;
 	
-	private static final String URL = "https://pizza-pricing-production.up.railway.app";
+	private static final String URL = "https://fake-pizza-api-production.up.railway.app/order";
 
 	// TODO: Task 5
 	// WARNING: DO NOT CHANGE THE METHOD'S SIGNATURE
-	public PizzaOrder placeOrder(PizzaOrder order) throws OrderException, IOException {
+	public PizzaOrder placeOrder(PizzaOrder order) throws OrderException {
 
 		MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
 
@@ -64,22 +63,21 @@ public class OrderingService {
 		
 		String payload = resp.getBody();
 
-		try (InputStream is = new ByteArrayInputStream(payload.getBytes())){
-            JsonReader reader = Json.createReader(is);
-            JsonObject o = reader.readObject();
+		String[] splitArray = payload.split(",");
 
-			order.setOrderId(o.getString("order id"));
-			order.setTotal(Float.parseFloat(o.getString("price")));
-			order.setDate(new Date(Long.parseLong(o.getString("order date"))));
-			
-		}
-
+		order.setOrderId(splitArray[0]);
+		order.setDate(new Date(Long.parseLong(splitArray[1])));
+		order.setTotal(Float.parseFloat(splitArray[2]));
+		
 		ordersRepo.add(order);
 		pendingOrdersRepo.add(order);
 
 
 		return order;
-	}
+		}
+
+		
+	
 
 	// For Task 6
 	// WARNING: Do not change the method's signature or its implemenation
@@ -100,9 +98,12 @@ public class OrderingService {
 			pendingDeleted = pendingOrdersRepo.delete(orderId);
 		}
 
+		System.out.println(">>>orderMarked>>>" + orderMarked);
+		System.out.println(">>>pendingDeleted>>>"+ pendingDeleted);
 
-		return ordersRepo.markOrderDelivered(orderId) && pendingOrdersRepo.delete(orderId);
+		//return ordersRepo.markOrderDelivered(orderId) && pendingOrdersRepo.delete(orderId);
+		return orderMarked && pendingDeleted;
 	}
 
-
+	
 }

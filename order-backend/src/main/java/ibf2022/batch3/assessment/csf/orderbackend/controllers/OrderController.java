@@ -36,7 +36,7 @@ public class OrderController {
 	// TODO: Task 3 - POST /api/order
 	@PostMapping(path="/api/order")
 	@ResponseBody
-	public ResponseEntity<String> postOrder(@RequestBody Order order) throws IOException{
+	public ResponseEntity<String> postOrder(@RequestBody Order order) {
 		System.out.println(">>>>post order>>>"+order.toString());
 		PizzaOrder po = new PizzaOrder();
 
@@ -106,7 +106,7 @@ public class OrderController {
 			jab.add(jOb);
 		}
 		
-		
+			System.out.println(">>>latest pendingOrders size>>>"+ pendingOrders);
 			return ResponseEntity
 			.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)
@@ -119,7 +119,11 @@ public class OrderController {
 	@ResponseBody()
 	public ResponseEntity<String> deletePendingOrder(@PathVariable String orderId){
 
+		
+		
 		if(this.orderSvc.markOrderDelivered(orderId)){
+			
+			System.out.println(">>>markOrderDelivered>>> true!!! ");
 			return ResponseEntity
 			.status(HttpStatus.OK)
 			.contentType(MediaType.APPLICATION_JSON)

@@ -46,16 +46,22 @@
       <tr>
         <td> <label>Toppings:</label> </td>
         <td>
+
+          <!--# in html element is a template reference It can be used to refer to this element in event bindings or in your  
+            component's code. For example, in the (change)="modifyToppings(topping)" event binding, topping refers to the <input>  
+            element itself, and you can access its properties or values within the modifyToppings() method.If we want to reference
+            multiple html elements separately, we need different template reference name for each of them
+            like in this case. Every input element has different template reference name-->
           <div class="space-around">
             <input type="checkbox" name="toppings" value="chicken" (change)="modifyToppings(topping)"  #topping formControlName="toppings"> Chicken
-            <input type="checkbox" name="toppings" value="seafood" formControlName="toppings"> Seafood
-            <input type="checkbox" name="toppings" value="beef" formControlName="toppings"> Beef
-            <input type="checkbox" name="toppings" value="vegetables" formControlName="toppings"> Vegetables
+            <input type="checkbox" name="toppings" value="seafood" (change)="modifyToppings(topping1)"  #topping1 formControlName="toppings"> Seafood
+            <input type="checkbox" name="toppings" value="beef" (change)="modifyToppings(topping2)" #topping2 formControlName="toppings"> Beef
+            <input type="checkbox" name="toppings" value="vegetables" (change)="modifyToppings(topping3)" #topping3 formControlName="toppings"> Vegetables
           </div>
           <div class="space-around">
-            <input type="checkbox" name="toppings" value="cheese" formControlName="toppings"> Extra Cheese
-            <input type="checkbox" name="toppings" value="arugula" formControlName="toppings"> Arugula (Rocket)
-            <input type="checkbox" name="toppings" value="pineapple" formControlName="toppings"> Pineapple
+            <input type="checkbox" name="toppings" value="cheese" (change)="modifyToppings(topping4)" #topping4 formControlName="toppings"> Extra Cheese
+            <input type="checkbox" name="toppings" value="arugula" (change)="modifyToppings(topping5)" #topping5 formControlName="toppings"> Arugula (Rocket)
+            <input type="checkbox" name="toppings" value="pineapple" (change)="modifyToppings(topping6)" #topping6 formControlName="toppings"> Pineapple
           </div>
           <div>
             <small>Select toppings, one or more from the above</small>
@@ -72,7 +78,7 @@
         <td></td>
         <td>
           <div class="justify-right">
-            <button type="submit" [disabled]="form.invalid">Place Order</button>
+            <button type="submit" [disabled]="invalidForm()">Place Order</button>
           </div>
         </td>
       </tr>

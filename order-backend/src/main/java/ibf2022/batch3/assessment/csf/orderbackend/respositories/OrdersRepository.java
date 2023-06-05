@@ -73,7 +73,11 @@ public class OrdersRepository {
         //                                                  .map(d -> convertFromDocument(d))
         //                                                  .toList();
 
-		MatchOperation mOp = Aggregation.match(Criteria.where("email").is(email));
+		Criteria criteria = new Criteria()
+			.where("email").is(email)
+			.and("delivered").exists(false);
+
+		MatchOperation mOp = Aggregation.match(criteria);
 
 		ProjectionOperation pop = Aggregation.project("_id", "total", "date");
 
@@ -113,7 +117,14 @@ public class OrdersRepository {
 
 		po.setOrderId(d.getString("_id"));
 		po.setDate(d.getDate("date"));
-		po.setTotal((float)d.getLong("total"));
+		//Note that even though 'total' is of type float, when we store it into mongoDB, 
+		//it will be automatically converted to a double type. In MongoDB, the float type 
+		//is not directly supported. MongoDB uses the BSON (Binary JSON) format to store data, 
+		//and in BSON, the equivalent data type for floating-point numbers is double. Therefore, regardless
+		//of whether you store a float or double value, it will be stored as a double type in MongoDB.
+		po.setTotal(Float.parseFloat(d.getDouble("total").toString()));
+
+		
 		// po.setName(d.getString("name"));
 		// po.setEmail(d.getString("email"));
 		// po.setSauce(d.getString("sauce"));
